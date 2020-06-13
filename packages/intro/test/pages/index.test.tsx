@@ -1,7 +1,7 @@
 import { combine, wrapper } from "@common/service"
 import { Color } from "@logic/Color"
 import { Counter } from "@logic/Counter"
-import { App } from "@pages/index"
+import LiveApp, { App } from "@pages/index"
 import { render } from "@testing-library/react"
 import { act } from "@testing-library/react-hooks"
 import React from "react"
@@ -70,5 +70,9 @@ describe("App", () => {
     })
 
     expect(setColor).toBeCalledWith("green")
+  })
+
+  it("LiveApp renders", () => {
+    render(<LiveApp />)
   })
 })
