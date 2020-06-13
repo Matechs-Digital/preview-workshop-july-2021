@@ -12,7 +12,8 @@
     "test:coverage": "jest --coverage",
     "start": "next start -p 8080",
     "dev": "next -p 8080",
-    "pretty": "prettier --write ."
+    "pretty": "prettier --write .",
+    "type-check": "tsc --pretty --noEmit"
   },
   "dependencies": {
     "next": "^9.4.4",

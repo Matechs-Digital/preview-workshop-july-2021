@@ -21,6 +21,7 @@ jobs:
           npm install -g yarn
           yarn
           yarn build
+          yarn type-check
           yarn test:coverage
         env:
           CI: "true"

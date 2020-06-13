@@ -9,7 +9,8 @@
     "build": "ultra -r --build build",
     "test": "ultra -r test",
     "test:coverage": "ultra -r test:coverage",
-    "pretty": "ultra -r pretty"
+    "pretty": "ultra -r pretty",
+    "type-check": "ultra -r type-check"
   },
   "workspaces": [
     "packages/*"
