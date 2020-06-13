@@ -1,4 +1,4 @@
-name: CI
+name: Coverage CI
 
 on:
   push:
@@ -21,6 +21,6 @@ jobs:
           npm install -g yarn
           yarn
           yarn build
-          yarn test
+          yarn test:coverage
         env:
           CI: "true"
