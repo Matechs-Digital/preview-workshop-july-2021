@@ -1,5 +1,5 @@
 import { createService } from "@common/service"
-import { Counter } from "@logic/Counter"
+import { Counter } from "@logic/counter"
 import React from "react"
 
 export interface Color {

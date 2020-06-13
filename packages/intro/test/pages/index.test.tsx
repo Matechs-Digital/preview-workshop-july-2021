@@ -1,6 +1,6 @@
 import { combine, wrapper } from "@common/service"
-import { Color } from "@logic/Color"
-import { Counter } from "@logic/Counter"
+import { Color } from "@logic/color"
+import { Counter } from "@logic/counter"
 import LiveApp, { App } from "@pages/index"
 import { render } from "@testing-library/react"
 import { act } from "@testing-library/react-hooks"

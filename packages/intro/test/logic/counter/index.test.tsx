@@ -1,5 +1,5 @@
 import { wrapper } from "@common/service"
-import { Counter, LiveCounter } from "@logic/Counter"
+import { Counter, LiveCounter } from "@logic/counter"
 import { act, renderHook } from "@testing-library/react-hooks"
 
 describe("Counter", () => {

@@ -1,6 +1,6 @@
 import { combine, wrapper } from "@common/service"
-import { Color, LiveColor } from "@logic/Color"
-import { Counter } from "@logic/Counter"
+import { Color, LiveColor } from "@logic/color"
+import { Counter } from "@logic/counter"
 import { act, renderHook } from "@testing-library/react-hooks"
 
 describe("Color", () => {

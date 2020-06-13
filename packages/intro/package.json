@@ -15,12 +15,12 @@
     "pretty": "prettier --write ."
   },
   "dependencies": {
-    "@org/common": "^1.0.0",
     "next": "^9.4.4",
     "react": "^16.13.1",
     "react-dom": "^16.13.1"
   },
   "devDependencies": {
+    "@org/common": "^1.0.0",
     "@testing-library/dom": "^7.9.0",
     "@testing-library/jest-dom": "^5.10.0",
     "@testing-library/react": "^10.2.1",

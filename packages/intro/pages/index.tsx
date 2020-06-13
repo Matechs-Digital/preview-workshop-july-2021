@@ -1,6 +1,6 @@
 import { combine } from "@common/service"
-import { Color, LiveColor } from "@logic/Color"
-import { Counter, LiveCounter } from "@logic/Counter"
+import { Color, LiveColor } from "@logic/color"
+import { Counter, LiveCounter } from "@logic/counter"
 import React from "react"
 
 export function UsingCounter() {
