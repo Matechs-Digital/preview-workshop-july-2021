@@ -18,10 +18,9 @@ export function createService<S>(name: string) {
 
         const entry = stacks[0]
 
-        stacks.shift()
-        stacks.shift()
-        stacks.shift()
-        stacks.shift()
+        if (stacks.length >= 4) {
+          stacks.splice(0, 4)
+        }
 
         Err.stack = [entry, ...stacks].join("\n")
       }
@@ -56,7 +55,7 @@ export function createService<S>(name: string) {
 
 export type Provider = <P>(_: React.ComponentType<P>) => React.ComponentType<P>
 
-export function combine(...providers: Provider[]): Provider {
+export function combine(...providers: Provider[] & { 0: Provider }): Provider {
   return providers.reduce((f, g) => (k) => f(g(k)))
 }
 
