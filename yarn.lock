@@ -4565,6 +4565,13 @@ jest-mock@^26.0.1:
   dependencies:
     "@jest/types" "^26.0.1"
 
+jest-module-name-mapper@^0.1.4:
+  version "0.1.4"
+  resolved "https://registry.yarnpkg.com/jest-module-name-mapper/-/jest-module-name-mapper-0.1.4.tgz#db9917c4b8bc44d64d6a4ead9914a121c05e51c8"
+  integrity sha512-8eos+sWme0Mb9N3LGfis70+UEO6QiM2RyTe8m68crXrhciDBmG4gxps13415yqWF4tDMrYPGE/Ilc0w57OaXug==
+  dependencies:
+    chalk "^2.4.2"
+
 jest-pnp-resolver@^1.2.1:
   version "1.2.1"
   resolved "https://registry.yarnpkg.com/jest-pnp-resolver/-/jest-pnp-resolver-1.2.1.tgz#ecdae604c077a7fbc70defb6d517c3c1c898923a"

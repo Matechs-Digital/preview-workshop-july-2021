@@ -1,3 +1,5 @@
+const mapper = require('jest-module-name-mapper').default
+
 module.exports = {
   roots: ["<rootDir>"],
   moduleFileExtensions: ["js", "ts", "tsx", "json"],
@@ -10,10 +12,6 @@ module.exports = {
     "jest-watch-typeahead/filename",
     "jest-watch-typeahead/testname"
   ],
-  moduleNameMapper: {
-    "@common/(.*)$": "<rootDir>/../common/lib/$1",
-    "@logic/(.*)$": "<rootDir>/src/logic/$1",
-    "@pages/(.*)$": "<rootDir>/pages/$1"
-  },
+  moduleNameMapper: mapper('tsconfig.json'),
   setupFilesAfterEnv: ["./jest.setup.js"]
 }
