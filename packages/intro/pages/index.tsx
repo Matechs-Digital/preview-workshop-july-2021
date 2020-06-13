@@ -36,6 +36,7 @@ export function UsingColor() {
         red
       </button>
       <button
+        data-testid="set-color-blue"
         onClick={() => {
           setColor("blue")
         }}
@@ -43,6 +44,7 @@ export function UsingColor() {
         blue
       </button>
       <button
+        data-testid="set-color-green"
         onClick={() => {
           setColor("green")
         }}

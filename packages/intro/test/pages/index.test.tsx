@@ -7,7 +7,7 @@ import { act } from "@testing-library/react-hooks"
 import React from "react"
 
 describe("App", () => {
-  it("renders learn react link", () => {
+  it("should use color & counter", () => {
     const increment = jest.fn()
     const setColor = jest.fn()
 
@@ -54,5 +54,21 @@ describe("App", () => {
     })
 
     expect(setColor).toBeCalledWith("red")
+
+    const setColorBlue = getByTestId("set-color-blue")
+
+    act(() => {
+      setColorBlue.click()
+    })
+
+    expect(setColor).toBeCalledWith("blue")
+
+    const setColorGreen = getByTestId("set-color-green")
+
+    act(() => {
+      setColorGreen.click()
+    })
+
+    expect(setColor).toBeCalledWith("green")
   })
 })
