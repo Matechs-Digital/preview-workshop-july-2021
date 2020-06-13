@@ -1,0 +1,21 @@
+{
+  "name": "org",
+  "private": "true",
+  "version": "1.0.0",
+  "author": "Michael Arnaldi",
+  "description": "Frontend Testing in TypeScript",
+  "license": "UNLICENSED",
+  "scripts": {
+    "build": "ultra -r --build build",
+    "test": "ultra -r test",
+    "test:coverage": "ultra -r test:coverage",
+    "pretty": "ultra -r pretty"
+  },
+  "workspaces": [
+    "packages/*"
+  ],
+  "devDependencies": {
+    "typescript": "^3.9.5",
+    "ultra-runner": "^3.5.0"
+  }
+}

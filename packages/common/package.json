@@ -1,0 +1,19 @@
+{
+  "name": "@org/common",
+  "version": "1.0.0",
+  "description": "Common Components",
+  "author": "Michael Arnaldi",
+  "license": "UNLICENSED",
+  "private": true,
+  "scripts": {
+    "build": "tsc -p tsconfig.build.json",
+    "pretty": "prettier --write ."
+  },
+  "dependencies": {
+    "react": "^16.13.1",
+    "react-dom": "^16.13.1"
+  },
+  "devDependencies": {
+    "@types/react": "^16.9.36"
+  }
+}

@@ -1,0 +1,5 @@
+node_modules/
+lib/
+.ultra.cache.json
+.next/
+coverage/
