@@ -99,25 +99,28 @@ export const LiveOrganizations = Organizations.provide(() => {
   }
 })
 
-export function foldOrganizationsStatus<A>(
-  status: OrganizationsStatus,
-  onNew: () => A,
-  onInFlight: () => A,
-  onErrored: (message: string) => A,
+export function foldOrganizationsStatus(
+  status: OrganizationsStatus
+): <A>(fold: {
+  onNew?: () => A
+  onInFlight: () => A
+  onErrored: (message: string) => A
   onDone: (orgs: Organization[]) => A
-): A {
-  switch (status._tag) {
-    case "Done": {
-      return onDone(status.currentPage)
-    }
-    case "Errored": {
-      return onErrored(status.message)
-    }
-    case "InFlight": {
-      return onInFlight()
-    }
-    case "New": {
-      return onNew()
+}) => A {
+  return (fold) => {
+    switch (status._tag) {
+      case "Done": {
+        return fold.onDone(status.currentPage)
+      }
+      case "Errored": {
+        return fold.onErrored(status.message)
+      }
+      case "InFlight": {
+        return fold.onInFlight()
+      }
+      case "New": {
+        return (fold.onNew || fold.onInFlight)()
+      }
     }
   }
 }
@@ -133,26 +136,21 @@ export const OrganizationsView = React.memo(
     React.useEffect(() => {
       nextPage()
     }, [])
+
+    const foldStatus = foldOrganizationsStatus(status)
+
     return (
       <>
-        {foldOrganizationsStatus(
-          status,
-          () => (
-            <Loading />
-          ),
-          () => (
-            <Loading />
-          ),
-          (message) => (
-            <ErrorMessage message={message} />
-          ),
-          (orgs) => (
+        {foldStatus({
+          onInFlight: () => <Loading />,
+          onErrored: (message) => <ErrorMessage message={message} />,
+          onDone: (orgs) => (
             <>
               <div style={{ marginBottom: "1em" }}>Organizations:</div>
               {orgs.map((o) => o.login).join(", ")}
             </>
           )
-        )}
+        })}
         {status._tag !== "InFlight" && status._tag !== "New" && (
           <div style={{ marginTop: "1em" }}>
             <button
@@ -160,7 +158,7 @@ export const OrganizationsView = React.memo(
                 nextPage()
               }}
             >
-              Load Next
+              Next
             </button>
           </div>
         )}
