@@ -3,6 +3,9 @@ import { Color, LiveColor } from "@logic/color"
 import { Counter, LiveCounter } from "@logic/counter"
 import React from "react"
 
+/**
+ * Using the Counter Service
+ */
 export function UsingCounter() {
   const { count, increment } = Counter.useService()
 
@@ -21,6 +24,9 @@ export function UsingCounter() {
   ))
 }
 
+/**
+ * Using the Color Service
+ */
 export function UsingColor() {
   const { color, setColor } = Color.useService()
 
@@ -55,6 +61,9 @@ export function UsingColor() {
   ))
 }
 
+/**
+ * Use Both Components
+ */
 export function App() {
   return (
     <>
@@ -64,4 +73,7 @@ export function App() {
   )
 }
 
+/**
+ * Export Live Component
+ */
 export default combine(LiveCounter(), LiveColor("red"))(App)

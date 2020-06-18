@@ -3,6 +3,9 @@ import { Color, LiveColor } from "@logic/color"
 import { Counter, LiveCounter } from "@logic/counter"
 import React from "react"
 
+/**
+ * Use Both Components using Use combinator
+ */
 export const UsingBoth = Use({ Counter, Color })(
   ({ Color: { color, setColor }, Counter: { increment } }) =>
     useMemo(color)(() => (
@@ -46,12 +49,18 @@ export const UsingBoth = Use({ Counter, Color })(
 
 UsingBoth.displayName = "UsingBoth"
 
+/**
+ * Use Consume Combinator
+ */
 const UseCounter = Consume(Counter)(({ count }) =>
   useMemo(count)(() => <div>count: {count}</div>)
 )
 
 UseCounter.displayName = "UseCounter"
 
+/**
+ * Export Live Component
+ */
 export default combine(
   LiveCounter(),
   LiveColor("red")

@@ -3,10 +3,13 @@ import * as G from "@logic/graduation"
 import * as React from "react"
 
 /**
- * Common Components
+ * Loading Component
  */
 export const Loading = () => <div>Loading...</div>
 
+/**
+ * Error Component
+ */
 export const ErrorMessage = ({ message }: { message: string }) => (
   <div>Error: {message}</div>
 )

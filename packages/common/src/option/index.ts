@@ -1,3 +1,6 @@
+/**
+ * Describes a value which can be defined or undefined
+ */
 export type Option<A> =
   | {
       _tag: "None"

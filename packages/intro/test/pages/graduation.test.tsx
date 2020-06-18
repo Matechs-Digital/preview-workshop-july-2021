@@ -9,4 +9,7 @@ describe("Graduation", () => {
   it.todo("should display Orgamizations on state Done")
   it.todo("should call nextPage on NextPage button clicked")
   it.todo("should display NextPage on state != InFlight & New")
+
+  // Requires mocking external api or patching fetch
+  it.todo("live component renders")
 })

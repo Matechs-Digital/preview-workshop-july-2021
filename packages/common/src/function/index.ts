@@ -1,7 +1,13 @@
+/**
+ * Simple typed identity
+ */
 export function identity<A>(a: A): A {
   return a
 }
 
+/**
+ * Maps over a record preserving the types of keys & values
+ */
 export function mapR<R extends { [k: string]: any }, T>(
   r: R,
   f: (v: R[keyof R]) => T
