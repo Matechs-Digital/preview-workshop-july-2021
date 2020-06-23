@@ -13,16 +13,16 @@
     "start": "next start -p 8080",
     "dev": "next -p 8080",
     "pretty": "prettier --write .",
-    "type-check": "tsc --pretty --noEmit"
+    "type-check": "tsc --pretty --noEmit",
+    "docker": "./dockerize.sh"
   },
   "dependencies": {
     "isomorphic-fetch": "^2.2.1",
-    "next": "^9.4.4",
     "react": "^16.13.1",
-    "react-dom": "^16.13.1"
+    "react-dom": "^16.13.1",
+    "next": "^9.4.4"
   },
   "devDependencies": {
-    "@org/common": "^1.0.0",
     "@testing-library/dom": "^7.9.0",
     "@testing-library/jest-dom": "^5.10.0",
     "@testing-library/react": "^10.2.1",
