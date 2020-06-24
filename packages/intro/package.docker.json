@@ -1,0 +1,14 @@
+{
+  "name": "@org/intro",
+  "version": "1.0.0",
+  "description": "Introduction To Testing",
+  "author": "Michael Arnaldi",
+  "license": "UNLICENSED",
+  "private": true,
+  "dependencies": {
+    "isomorphic-fetch": "^2.2.1",
+    "react": "^16.13.1",
+    "react-dom": "^16.13.1",
+    "next": "^9.4.4"
+  }
+}
