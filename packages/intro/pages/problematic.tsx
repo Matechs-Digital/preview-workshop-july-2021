@@ -63,6 +63,7 @@ export const Organizations = () => {
               [0, ...orgs.map((o) => o.id)].reduce((x, y) => Math.max(x, y))
             )
               .then((orgs) => {
+                setError(undefined)
                 setOrgs(orgs)
                 setLoading(false)
               })
