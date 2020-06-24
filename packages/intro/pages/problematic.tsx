@@ -32,6 +32,7 @@ export const Organizations = () => {
     fetchOrganizations()
       .then((orgs) => {
         setOrgs(orgs)
+        setError(undefined)
         setLoading(false)
       })
       .catch(() => {
