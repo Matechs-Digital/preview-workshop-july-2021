@@ -1,5 +1,5 @@
 import * as React from "react"
-import { createService, Use, Consume } from "@common/service"
+import { createService, Consume } from "@common/service"
 import * as H from "@logic/http"
 
 export interface Organization {
@@ -23,7 +23,7 @@ export const fetchOrganizations = async (since = 0) => {
   )
 }
 
-export const Loading = () => <div>Loading...</div>
+export const OrganizationsLoading = () => <div>Loading...</div>
 
 export const ErrorMessage = ({ message }: { message: string }) => (
   <div>Error: {message}</div>
@@ -143,11 +143,44 @@ export const OrganizationsServiceLive = OrganizationsService.provide(() => {
   }
 })
 
-export const OrganizationsNew = ({ firstPage }: New) => {
+export function OrganizationsNew({ firstPage }: New) {
   React.useEffect(() => {
     firstPage()
   }, [])
-  return <Loading />
+  return <OrganizationsLoading />
+}
+
+export function OrganizationsErrored(status: Errored): JSX.Element {
+  return (
+    <>
+      <ErrorMessage message={status.message} />
+      <button
+        onClick={() => {
+          status.retry()
+        }}
+      >
+        Retry
+      </button>
+    </>
+  )
+}
+
+export function OrganizationsDone(status: Done): JSX.Element {
+  return (
+    <>
+      <div style={{ marginBottom: "1em" }}>Organizations:</div>
+      {status.orgs.map((o) => o.login).join(", ")}
+      <div style={{ marginTop: "1em" }}>
+        <button
+          onClick={() => {
+            status.nextPage()
+          }}
+        >
+          Next
+        </button>
+      </div>
+    </>
+  )
 }
 
 export const OrganizationsView = React.memo(
@@ -157,36 +190,13 @@ export const OrganizationsView = React.memo(
         return <OrganizationsNew {...status} />
       }
       case "Errored": {
-        return (
-          <>
-            <ErrorMessage message={status.message} />
-            <button
-              onClick={() => {
-                status.retry()
-              }}
-            />
-          </>
-        )
+        return <OrganizationsErrored {...status} />
       }
       case "Loading": {
-        return <Loading />
+        return <OrganizationsLoading />
       }
       case "Done": {
-        return (
-          <>
-            <div style={{ marginBottom: "1em" }}>Organizations:</div>
-            {status.orgs.map((o) => o.login).join(", ")}
-            <div style={{ marginTop: "1em" }}>
-              <button
-                onClick={() => {
-                  status.nextPage()
-                }}
-              >
-                Next
-              </button>
-            </div>
-          </>
-        )
+        return <OrganizationsDone {...status} />
       }
     }
   },
