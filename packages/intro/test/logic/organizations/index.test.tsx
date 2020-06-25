@@ -8,44 +8,19 @@ import {
 import { renderHook, act } from "@testing-library/react-hooks"
 import { wrapper } from "@common/service"
 import * as H from "@logic/http"
+import { organizationsFixture } from "./fixtures"
 
 describe("OrganizationsServiceLive", () => {
+  afterEach(() => {
+    jest.clearAllMocks()
+  })
   it("fetch nextPage", async () => {
     const mock = jest.spyOn(H, "getJson")
     const urls = jest.fn()
 
     mock.mockImplementation((url) => {
       urls(url)
-      return Promise.resolve<Organization[]>([
-        {
-          events_url: "",
-          hooks_urs: "",
-          id: 1,
-          issues_url: "",
-          login: "",
-          members_url: "",
-          node_id: "",
-          public_members_url: "",
-          repos_url: "",
-          url: "",
-          avatar_url: "",
-          description: ""
-        },
-        {
-          events_url: "",
-          hooks_urs: "",
-          id: 2,
-          issues_url: "",
-          login: "",
-          members_url: "",
-          node_id: "",
-          public_members_url: "",
-          repos_url: "",
-          url: "",
-          avatar_url: "",
-          description: ""
-        }
-      ])
+      return Promise.resolve(organizationsFixture)
     })
 
     const { result, waitForNextUpdate } = renderHook(
