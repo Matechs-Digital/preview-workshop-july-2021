@@ -1,4 +1,6 @@
 import * as React from "react"
+import { createService, Use, Consume } from "@common/service"
+import * as H from "@logic/http"
 
 export interface Organization {
   login: string
@@ -15,69 +17,184 @@ export interface Organization {
   description?: string
 }
 
-export const Organizations = () => {
-  const [loading, setLoading] = React.useState(false)
-  const [error, setError] = React.useState<string | undefined>(undefined)
-  const [orgs, setOrgs] = React.useState<Organization[]>([])
-
-  const fetchOrganizations = async (since = 0) => {
-    const res = await fetch(
-      `https://api.github.com/organizations?since=${since}`
-    )
-    return (await res.json()) as Organization[]
-  }
-
-  React.useEffect(() => {
-    setLoading(true)
-    fetchOrganizations()
-      .then((orgs) => {
-        setOrgs(orgs)
-        setError(undefined)
-        setLoading(false)
-      })
-      .catch(() => {
-        setError("Unexpected Error")
-        setLoading(false)
-      })
-  }, [])
-
-  if (loading) {
-    return <div>Loading...</div>
-  }
-
-  return (
-    <>
-      {error ? (
-        <div>Error: {error}</div>
-      ) : (
-        <>
-          <div style={{ marginBottom: "1em" }}>Organizations:</div>
-          {orgs.map((o) => o.login).join(", ")}
-        </>
-      )}
-      <div style={{ marginTop: "1em" }}>
-        <button
-          onClick={() => {
-            setLoading(true)
-            fetchOrganizations(
-              [0, ...orgs.map((o) => o.id)].reduce((x, y) => Math.max(x, y))
-            )
-              .then((orgs) => {
-                setError(undefined)
-                setOrgs(orgs)
-                setLoading(false)
-              })
-              .catch(() => {
-                setError("Unexpected Error")
-                setLoading(false)
-              })
-          }}
-        >
-          Next
-        </button>
-      </div>
-    </>
+export const fetchOrganizations = async (since = 0) => {
+  return H.getJson<Organization[]>(
+    `https://api.github.com/organizations?since=${since}`
   )
 }
 
-export default Organizations
+export const Loading = () => <div>Loading...</div>
+
+export const ErrorMessage = ({ message }: { message: string }) => (
+  <div>Error: {message}</div>
+)
+
+export interface New {
+  _tag: "New"
+  firstPage: () => void
+}
+
+export interface Loading {
+  _tag: "Loading"
+}
+
+export interface Errored {
+  _tag: "Errored"
+  message: string
+
+  retry: () => void
+}
+
+export interface Done {
+  _tag: "Done"
+  orgs: Organization[]
+  lastId: number
+
+  nextPage: () => void
+}
+
+export type OrganizationsStatus = New | Loading | Errored | Done
+
+export interface OrganizationsService {
+  status: OrganizationsStatus
+  epoch: number
+}
+
+export const OrganizationsService = createService<OrganizationsService>(
+  "OrganizationsService"
+)
+
+export function StatusNew(firstPage: () => void): OrganizationsStatus {
+  return {
+    _tag: "New",
+    firstPage
+  }
+}
+
+export const StatusLoading: OrganizationsStatus = {
+  _tag: "Loading"
+}
+
+export function StatusErrored(
+  message: string,
+  retry: () => void
+): OrganizationsStatus {
+  return {
+    _tag: "Errored",
+    message,
+    retry
+  }
+}
+
+export function StatusDone(
+  orgs: Organization[],
+  lastId: number,
+  nextPage: () => void
+): OrganizationsStatus {
+  return {
+    _tag: "Done",
+    nextPage,
+    orgs,
+    lastId
+  }
+}
+
+export const OrganizationsServiceLive = OrganizationsService.provide(() => {
+  const [epoch, setEpoch] = React.useState(0)
+  const [status, setStatus] = React.useState<OrganizationsStatus>(
+    StatusNew(() => {
+      nextPage(0)
+    })
+  )
+
+  const nextEpoch = () => {
+    setEpoch((currentEpoch) => currentEpoch + 1)
+  }
+
+  const nextPage = (last: number) => {
+    setStatus(StatusLoading)
+    nextEpoch()
+
+    fetchOrganizations(last)
+      .then((orgs) => {
+        const lastId = [0, ...orgs.map((o) => o.id)].reduce((x, y) =>
+          Math.max(x, y)
+        )
+        setStatus(
+          StatusDone(orgs, lastId, () => {
+            nextPage(lastId)
+          })
+        )
+        nextEpoch()
+      })
+      .catch((e) => {
+        setStatus(
+          StatusErrored(String(e), () => {
+            nextPage(last)
+          })
+        )
+        nextEpoch()
+      })
+  }
+
+  return {
+    epoch,
+    status
+  }
+})
+
+export const OrganizationsNew = ({ firstPage }: New) => {
+  React.useEffect(() => {
+    firstPage()
+  }, [])
+  return <Loading />
+}
+
+export const OrganizationsView = React.memo(
+  ({ status }: OrganizationsService) => {
+    switch (status._tag) {
+      case "New": {
+        return <OrganizationsNew {...status} />
+      }
+      case "Errored": {
+        return (
+          <>
+            <ErrorMessage message={status.message} />
+            <button
+              onClick={() => {
+                status.retry()
+              }}
+            />
+          </>
+        )
+      }
+      case "Loading": {
+        return <Loading />
+      }
+      case "Done": {
+        return (
+          <>
+            <div style={{ marginBottom: "1em" }}>Organizations:</div>
+            {status.orgs.map((o) => o.login).join(", ")}
+            <div style={{ marginTop: "1em" }}>
+              <button
+                onClick={() => {
+                  status.nextPage()
+                }}
+              >
+                Next
+              </button>
+            </div>
+          </>
+        )
+      }
+    }
+  },
+  (p, c) => p.epoch === c.epoch
+)
+
+export const OrganizationsContainer = Consume(OrganizationsService)((p) => (
+  <OrganizationsView {...p} />
+))
+
+export default OrganizationsServiceLive()(OrganizationsContainer)
