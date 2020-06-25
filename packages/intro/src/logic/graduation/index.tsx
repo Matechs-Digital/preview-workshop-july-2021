@@ -2,6 +2,7 @@ import "isomorphic-fetch"
 
 import { createService } from "@common/service"
 import * as React from "react"
+import * as H from "@logic/http"
 
 /**
  * Domain Definition
@@ -92,9 +93,9 @@ export interface FetchSince {
 }
 
 export const fetchSince: FetchSince = (since: number) =>
-  fetch(`https://api.github.com/organizations?since=${since}`)
-    .then((res) => res.json())
-    .then((res) => res as Organization[])
+  H.getJson<Organization[]>(
+    `https://api.github.com/organizations?since=${since}`
+  )
 
 const LiveOrganizations_ = Organizations.provide((fetchSince: FetchSince) => {
   const [status, setStatus] = React.useState<OrganizationsStatus>({
