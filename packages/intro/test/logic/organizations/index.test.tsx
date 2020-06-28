@@ -30,21 +30,20 @@ describe("OrganizationsServiceLive", () => {
       }
     )
 
-    expect(result.current.status._tag).toStrictEqual("New")
+    expect(result.current._tag).toStrictEqual("New")
 
     act(() => {
-      ;(result.current.status as New).firstPage()
+      ;(result.current as New).firstPage()
     })
 
-    expect(result.current.status._tag).toStrictEqual("Loading")
+    expect(result.current._tag).toStrictEqual("Loading")
 
     await waitForNextUpdate()
 
-    expect(result.current.status._tag).toStrictEqual("Done")
-    expect((result.current.status as Done).lastId).toStrictEqual(2)
+    expect(result.current._tag).toStrictEqual("Done")
 
     act(() => {
-      ;(result.current.status as Done).nextPage()
+      ;(result.current as Done).nextPage()
     })
 
     await waitForNextUpdate()

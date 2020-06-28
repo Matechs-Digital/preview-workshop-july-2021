@@ -41,44 +41,36 @@ export interface Loading {
 export interface Errored {
   _tag: "Errored"
   message: string
-
   retry: () => void
 }
 
 export interface Done {
   _tag: "Done"
   orgs: Organization[]
-  lastId: number
-
   nextPage: () => void
 }
 
-export type OrganizationsStatus = New | Loading | Errored | Done
-
-export interface OrganizationsService {
-  status: OrganizationsStatus
-  epoch: number
-}
+export type OrganizationsService = New | Loading | Errored | Done
 
 export const OrganizationsService = createService<OrganizationsService>(
   "OrganizationsService"
 )
 
-export function StatusNew(firstPage: () => void): OrganizationsStatus {
+export function StatusNew(firstPage: () => void): OrganizationsService {
   return {
     _tag: "New",
     firstPage
   }
 }
 
-export const StatusLoading: OrganizationsStatus = {
+export const StatusLoading: OrganizationsService = {
   _tag: "Loading"
 }
 
 export function StatusErrored(
   message: string,
   retry: () => void
-): OrganizationsStatus {
+): OrganizationsService {
   return {
     _tag: "Errored",
     message,
@@ -88,32 +80,24 @@ export function StatusErrored(
 
 export function StatusDone(
   orgs: Organization[],
-  lastId: number,
   nextPage: () => void
-): OrganizationsStatus {
+): OrganizationsService {
   return {
     _tag: "Done",
     nextPage,
-    orgs,
-    lastId
+    orgs
   }
 }
 
 export const OrganizationsServiceLive = OrganizationsService.provide(() => {
-  const [epoch, setEpoch] = React.useState(0)
-  const [status, setStatus] = React.useState<OrganizationsStatus>(
+  const [status, setStatus] = React.useState<OrganizationsService>(
     StatusNew(() => {
       nextPage(0)
     })
   )
 
-  const nextEpoch = () => {
-    setEpoch((currentEpoch) => currentEpoch + 1)
-  }
-
   const nextPage = (last: number) => {
     setStatus(StatusLoading)
-    nextEpoch()
 
     fetchOrganizations(last)
       .then((orgs) => {
@@ -121,26 +105,21 @@ export const OrganizationsServiceLive = OrganizationsService.provide(() => {
           Math.max(x, y)
         )
         setStatus(
-          StatusDone(orgs, lastId, () => {
+          StatusDone(orgs, () => {
             nextPage(lastId)
           })
         )
-        nextEpoch()
       })
       .catch((e) => {
         setStatus(
-          StatusErrored(String(e), () => {
+          StatusErrored(e instanceof Error ? e.message : String(e), () => {
             nextPage(last)
           })
         )
-        nextEpoch()
       })
   }
 
-  return {
-    epoch,
-    status
-  }
+  return status
 })
 
 export function OrganizationsNew({ firstPage }: New) {
@@ -184,7 +163,7 @@ export function OrganizationsDone(status: Done): JSX.Element {
 }
 
 export const OrganizationsView = React.memo(
-  ({ status }: OrganizationsService) => {
+  (status: OrganizationsService) => {
     switch (status._tag) {
       case "New": {
         return <OrganizationsNew {...status} />
@@ -200,7 +179,7 @@ export const OrganizationsView = React.memo(
       }
     }
   },
-  (p, c) => p.epoch === c.epoch
+  (p, c) => p._tag === c._tag
 )
 
 export const OrganizationsContainer = Consume(OrganizationsService)((p) => (
